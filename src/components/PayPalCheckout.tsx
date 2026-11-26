@@ -23,6 +23,17 @@ export default function PayPalCheckout({
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+
+  if (!clientId) {
+    return (
+      <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800 border border-amber-200">
+        PayPal checkout is not configured yet (missing NEXT_PUBLIC_PAYPAL_CLIENT_ID).
+      </div>
+    );
+  }
 
   if (orderComplete) {
     return (
@@ -47,9 +58,15 @@ export default function PayPalCheckout({
         </div>
       )}
 
+      {isSaving && (
+        <div className="mb-3 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700 border border-emerald-200">
+          Finalizing your payment and saving your shipping details...
+        </div>
+      )}
+
       <PayPalScriptProvider
         options={{
-          clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'test',
+          clientId,
           currency: 'USD',
           intent: 'capture',
         }}
@@ -79,28 +96,54 @@ export default function PayPalCheckout({
             });
           }}
           onApprove={async (_data, actions) => {
+            setErrorMsg('');
+            setIsSaving(true);
             try {
               const details = await actions.order!.capture();
               const payer = details.payer;
               const shipping = details.purchase_units?.[0]?.shipping;
+              const addr = shipping?.address;
+
+              const fullName =
+                shipping?.name?.full_name ||
+                `${payer?.name?.given_name || ''} ${payer?.name?.surname || ''}`.trim() ||
+                'Customer';
+
+              const shippingSummary = addr
+                ? [
+                    addr.address_line_1,
+                    addr.address_line_2,
+                    addr.admin_area_2,
+                    addr.admin_area_1,
+                    addr.postal_code,
+                    addr.country_code,
+                  ]
+                    .filter(Boolean)
+                    .join(', ')
+                : '';
 
               const { error } = await supabase.from('orders').insert([
                 {
                   paypal_order_id: details.id,
-                  customer_name:
-                    shipping?.name?.full_name ||
-                    `${payer?.name?.given_name || ''} ${payer?.name?.surname || ''}`.trim(),
+                  customer_name: fullName,
                   customer_email: payer?.email_address || 'no-email@provided.com',
-                  shipping_address: shipping?.address || {},
+                  shipping_address: addr || {},
+                  shipping_summary: shippingSummary,
                   bundle_type: bundle,
                   color,
                   quantity,
                   total_usd: price,
+                  status: 'PAID',
                 },
               ]);
 
               if (error) {
                 console.error('Supabase insert error:', error);
+                setErrorMsg(
+                  `Payment approved (${details.id}), but saving order failed: ${error.message}`
+                );
+                setIsSaving(false);
+                return;
               }
 
               setOrderNumber(details.id || 'TP-CONFIRMED');
@@ -108,10 +151,13 @@ export default function PayPalCheckout({
             } catch (err) {
               console.error(err);
               setErrorMsg('Payment could not be completed. Please try again.');
+            } finally {
+              setIsSaving(false);
             }
           }}
           onError={(err) => {
             console.error('PayPal Error:', err);
+            setIsSaving(false);
             setErrorMsg('There was an issue connecting to PayPal. Please refresh and try again.');
           }}
         />
