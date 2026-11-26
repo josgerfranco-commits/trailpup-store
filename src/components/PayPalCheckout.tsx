@@ -11,6 +11,7 @@ interface CheckoutProps {
   price: number;
   quantity: number;
   title: string;
+  sku?: string;
 }
 
 export default function PayPalCheckout({
@@ -19,6 +20,7 @@ export default function PayPalCheckout({
   price,
   quantity,
   title,
+  sku = 'CJMY178964801AZ',
 }: CheckoutProps) {
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
@@ -44,7 +46,7 @@ export default function PayPalCheckout({
           Order Reference: <span className="font-mono font-semibold">{orderNumber}</span>
         </p>
         <p className="text-sm text-slate-600 mt-3">
-          We are preparing your <strong>TrailPup 2-in-1 Bottle ({color})</strong>. You will receive your USPS/UPS tracking number via email within 24–48 hours.
+          We are preparing your <strong>TrailPup 2-in-1 Bottle ({color}, Qty: {quantity})</strong>. Estimated US delivery is <strong>9–17 days</strong>, and tracking details will be sent by email once dispatched.
         </p>
       </div>
     );
@@ -69,10 +71,11 @@ export default function PayPalCheckout({
           clientId,
           currency: 'USD',
           intent: 'capture',
+          locale: 'en_US',
         }}
       >
         <PayPalButtons
-          forceReRender={[price, color, bundle]}
+          forceReRender={[price, color, bundle, quantity, sku]}
           style={{
             layout: 'vertical',
             color: 'gold',
@@ -86,7 +89,7 @@ export default function PayPalCheckout({
               intent: 'CAPTURE',
               purchase_units: [
                 {
-                  description: `${title} - Color: ${color}`,
+                  description: `${title} - Color: ${color} - Qty: ${quantity} - SKU: ${sku}`,
                   amount: {
                     currency_code: 'USD',
                     value: price.toFixed(2),

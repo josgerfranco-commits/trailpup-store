@@ -12,10 +12,12 @@ import {
   ChevronDown,
 } from 'lucide-react';
 
+const SKU = 'CJMY178964801AZ';
+
 const COLORS = [
-  { name: 'Sage Green', hex: '#6B8E78', image: '/product-sage.jpg' },
-  { name: 'Coral Pink', hex: '#E87A7A', image: '/product-coral.jpg' },
-  { name: 'Sky Blue', hex: '#5B9BD5', image: '/product-sky.jpg' },
+  { name: 'Green', hex: '#4F775D', image: '/product-green.jpg' },
+  { name: 'Beige', hex: '#E6DCC8', image: '/product-beige.jpg' },
+  { name: 'Grey', hex: '#9CA3AF', image: '/product-grey.jpg' },
 ];
 
 const BUNDLES = {
@@ -26,7 +28,7 @@ const BUNDLES = {
     price: 28.99,
     compareAt: 39.99,
     quantity: 1,
-    subtitle: 'Free US Shipping (4–7 Business Days)',
+    subtitle: 'Free US Shipping (Est. 9–17 days: 1–3d processing + 8–14d transit)',
   },
   double: {
     id: 'double' as const,
@@ -35,7 +37,7 @@ const BUNDLES = {
     price: 46.99,
     compareAt: 79.98,
     quantity: 2,
-    subtitle: 'Keep one in the car + one by the door • Free US Shipping',
+    subtitle: 'Keep one in the car + one by the door • Free US Shipping (Est. 9–17 days)',
   },
 };
 
@@ -50,19 +52,19 @@ export default function HomePage() {
   const faqs = [
     {
       q: 'How long does shipping to the US take?',
-      a: 'All orders ship directly from our US fulfillment partners within 24–48 hours and arrive in 4 to 7 business days with full USPS/UPS tracking.',
+      a: 'Orders take 1–3 business days for processing and 8–14 days in transit to the US (estimated 9–17 days total) with tracking updates.',
     },
     {
       q: 'Does it really never leak inside a backpack or car?',
-      a: 'Yes. TrailPup uses a medical-grade silicone seal ring plus a physical one-touch lock switch. Once locked, zero water can escape even upside down.',
+      a: 'Yes. TrailPup uses a silicone seal ring plus a physical lock switch. Once locked, it is built to prevent leaks in your bag or car.',
     },
     {
       q: 'What happens to the water my dog does not finish?',
-      a: 'Simply tilt the bottle upright and press the water-release button—unused clean water drains right back into the bottle without wasting a drop.',
+      a: 'Simply tilt the bottle upright and press the water-return button—unused water drains back inside so you do not waste water on walks.',
     },
     {
       q: 'Is it safe for large and small breeds?',
-      a: 'Absolutely. The wide trough fits both flat-nosed and large breeds comfortably, holds 19 oz (550 ml) of water plus 100g of kibble/treats, and is 100% BPA-Free.',
+      a: 'Yes. It works well for daily walks and outings, holds water plus a treat/kibble compartment at the base, and is made with BPA-free materials.',
     },
   ];
 
@@ -70,7 +72,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white text-slate-900">
       {/* Top Announcement Bar */}
       <div className="bg-slate-900 text-white text-center text-xs sm:text-sm py-2.5 px-4 font-medium tracking-wide">
-        🇺🇸 FREE US SHIPPING ON ALL ORDERS • 30-DAY LEAK-PROOF GUARANTEE
+        🇺🇸 FREE US SHIPPING ON ALL ORDERS (EST. 9–17 DAYS) • 30-DAY GUARANTEE
       </div>
 
       {/* Header */}
@@ -117,11 +119,11 @@ export default function HomePage() {
               </div>
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
                 <Sparkles className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
-                <p className="text-xs font-semibold">Food-Grade BPA Free</p>
+                <p className="text-xs font-semibold">BPA-Free Materials</p>
               </div>
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
                 <Truck className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
-                <p className="text-xs font-semibold">Fast US Delivery</p>
+                <p className="text-xs font-semibold">Est. 9–17 Day US Delivery</p>
               </div>
             </div>
 
@@ -150,7 +152,7 @@ export default function HomePage() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
-                TrailPup™ 2-in-1 Portable Dog Water & Treat Bottle
+                TrailPup™ 2-in-1 Portable Dog Water &amp; Treat Bottle
               </h1>
               <p className="text-slate-600 mt-3 text-base leading-relaxed">
                 Keep your pup hydrated and rewarded on every hike, road trip, and park walk—with zero spills, zero wasted water, and one-hand operation.
@@ -168,7 +170,7 @@ export default function HomePage() {
               <li className="flex items-center gap-2.5">
                 <Check className="w-5 h-5 text-emerald-600 shrink-0" />
                 <span>
-                  <strong>Built-In Treat Compartment:</strong> Holds 100g of kibble or training snacks at the base.
+                  <strong>Built-In Treat Compartment:</strong> Holds kibble or training snacks at the base.
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
@@ -197,7 +199,7 @@ export default function HomePage() {
                     }`}
                   >
                     <span
-                      className="w-4 h-4 rounded-full border border-black/10"
+                      className="w-4 h-4 rounded-full border border-black/20"
                       style={{ backgroundColor: c.hex }}
                     />
                     {c.name}
@@ -261,6 +263,7 @@ export default function HomePage() {
                 price={activeOffer.price}
                 quantity={activeOffer.quantity}
                 title={activeOffer.title}
+                sku={SKU}
               />
             </div>
           </div>
@@ -306,15 +309,15 @@ export default function HomePage() {
           <div>
             <p className="font-bold text-slate-900 text-base">TrailPup™ Gear</p>
             <p className="mt-1 text-xs">
-              Smart hydration & travel essentials for dogs. Support: support@trailpupgear.com
+              Smart hydration &amp; travel essentials for dogs. Support: support@trailpupgear.com
             </p>
           </div>
           <div className="flex flex-wrap gap-6 text-xs font-medium text-slate-600">
             <span className="flex items-center gap-1">
               <RotateCcw className="w-3.5 h-3.5" /> 30-Day Return Policy
             </span>
-            <span>Shipping Policy (4–7 Business Days US)</span>
-            <span>Privacy Policy & Terms of Service</span>
+            <span>Shipping Policy (Est. 9–17 Days US)</span>
+            <span>Privacy Policy &amp; Terms of Service</span>
           </div>
         </div>
       </footer>
