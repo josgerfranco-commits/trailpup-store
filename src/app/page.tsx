@@ -15,9 +15,9 @@ import {
 const SKU = 'CJMY178964801AZ';
 
 const COLORS = [
-  { name: 'Green', hex: '#4F775D', image: '/product-green.jpg' },
-  { name: 'Beige', hex: '#E6DCC8', image: '/product-beige.jpg' },
-  { name: 'Grey', hex: '#9CA3AF', image: '/product-grey.jpg' },
+  { name: 'Green', hex: '#4F775D', image: '/product-sage.jpg' },
+  { name: 'Beige', hex: '#E6DCC8', image: '/product-coral.jpg' },
+  { name: 'Grey', hex: '#9CA3AF', image: '/product-sky.jpg' },
 ];
 
 const BUNDLES = {
